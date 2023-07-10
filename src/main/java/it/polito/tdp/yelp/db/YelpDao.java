@@ -111,5 +111,88 @@ public class YelpDao {
 		}
 	}
 	
+	public Integer contaNReviewPerUser(String userid){
+		String sql = "select count(distinct r.review_id) as n "
+				+ "from reviews r, users u "
+				+ "where r.user_id=u.user_id and u.user_id=? ";
+		int result = 0;
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, userid);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+				result=res.getInt("n");
+			}
+			res.close();
+			st.close();
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public Integer contaNReviewInComune(String userid1, String userid2){
+		String sql = "select count(distinct r1.review_id) as n "
+				+ "from reviews r1, users u1, reviews r2, users u2 "
+				+ "where r1.user_id=u1.user_id and u1.user_id=? and r2.user_id=u2.user_id and u2.user_id=? and r1.business_id=r2.business_id ";
+		int result = 0;
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, userid1);
+			st.setString(2, userid2);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+				result=res.getInt("n");
+			}
+			res.close();
+			st.close();
+			conn.close();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return result;
+	}
+	
+	public Integer contaNReviewInComuneConAnno(String userid1, String userid2, int anno){
+		String sql = "select count(distinct r1.review_id) as n "
+				+ "				from reviews r1, users u1, reviews r2, users u2 "
+				+ "				where r1.user_id=u1.user_id and u1.user_id=? and r2.user_id=u2.user_id and u2.user_id=? and r1.business_id=r2.business_id and YEAR(r1.`review_date`)=? and YEAR(r2.`review_date`)=? ";
+		int result = 0;
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, userid1);
+			st.setString(2, userid2);
+			st.setInt(3, anno);
+			st.setInt(4, anno);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+				result=res.getInt("n");
+			}
+			res.close();
+			st.close();
+			conn.close();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return result;
+	}
+	
 	
 }

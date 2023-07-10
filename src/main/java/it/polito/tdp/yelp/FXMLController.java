@@ -5,9 +5,15 @@
 package it.polito.tdp.yelp;
 
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+
+import org.jgrapht.alg.util.Pair;
 
 import it.polito.tdp.yelp.model.Model;
+import it.polito.tdp.yelp.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -38,13 +44,13 @@ public class FXMLController {
     private TextField txtX2; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbAnno"
-    private ComboBox<?> cmbAnno; // Value injected by FXMLLoader
+    private ComboBox<Integer> cmbAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtN"
     private TextField txtN; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbUtente"
-    private ComboBox<?> cmbUtente; // Value injected by FXMLLoader
+    private ComboBox<Pair<String, String>> cmbUtente; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtX1"
     private TextField txtX1; // Value injected by FXMLLoader
@@ -54,12 +60,67 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	
+    	 String tn = txtN.getText() ;
+     	
+     	if(tn.equals("")) {
+     		txtResult.setText("Inserire un numero di recensioni.\n");
+     		return ;
+     	}
+     	
+     	int n = 0 ;
 
-    }
+     	try {
+ 	    	n = Integer.parseInt(tn) ;
+     	} catch(NumberFormatException e) {
+     		txtResult.setText("Inserire un numero.\n");
+     		return ;
+     	}
+     	
+        Integer anno = cmbAnno.getValue() ;
+     	
+     	if(anno==null) {
+     		txtResult.setText("Inserire un anno.\n");
+     		return ;
+     	}
+     	
+//    	creazione grafo
+    	this.model.creaGrafo(n, anno);
+    	
+    	
+//    	stampa grafo
+    	this.txtResult.setText("Grafo creato.\n");
+    	this.txtResult.appendText("Ci sono " + this.model.nVertici() + " vertici\n");
+    	this.txtResult.appendText("Ci sono " + this.model.nArchi() + " archi\n\n");
+    	
+    	Set<User> vertici = this.model.getVertici();
+    	
+    	for(User i : vertici) {
+    		cmbUtente.getItems().add(new Pair<String, String>(i.getName(), i.getUserId()));
+    	}
+    	
+    	btnUtenteSimile.setDisable(false);
+     }
 
     @FXML
     void doUtenteSimile(ActionEvent event) {
-
+    	
+    	Pair<String, String> uid=cmbUtente.getValue();
+    	User v = new User(null, 0, 0, 0, null, 0, 0);
+    	
+    	for(User u : this.model.getVertici()) {
+    		if(u.getUserId().equals(uid.getSecond())) {
+    			v = u;
+    			break;
+    		}
+    	}
+    	
+    	List<Pair<String, Double>> ris = this.model.trovaSimili(v);
+    	
+    	for(Pair p : ris) {
+    		this.txtResult.appendText(""+p.getFirst()+" --> Grado:"+ p.getSecond()+"\n");
+    	}
+    	
     }
     
     @FXML
@@ -84,5 +145,13 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	
+    	List<Integer> anni = new LinkedList<>();
+    	for(int i=2005; i<2014; i++) {
+    		anni.add(i);
+    	}
+    	cmbAnno.getItems().addAll(anni);
+    	btnUtenteSimile.setDisable(true);
+    	
     }
 }
