@@ -22,9 +22,6 @@ public class Model {
 	private Graph<User, DefaultWeightedEdge> grafo;
 	private Map<String, User> userMap;
 	private List<User> userList;
-	private Map<User, List<Review>> reviewMap;
-	private List<Review> reviewList;
-	private List<Review> reviewPerUserList;
 	
 	public Model() {
 		this.dao = new YelpDao();
@@ -57,46 +54,6 @@ public class Model {
 	
 	// Aggiunta ARCHI
 	
-//	this.reviewMap=new HashMap<>();
-//	this.reviewList = this.dao.getAllReviews();
-//	this.reviewPerUserList = this.dao.getAllReviews();
-//	
-//	for(User i : vertici) {
-//	for(Review j : reviewList) {
-//		if(i.getUserId().equals(j.getUserId()) && j.getDate().getYear()==anno) {
-//		this.reviewPerUserList.add(j);
-//		}
-//	}
-//	reviewMap.put(i, reviewPerUserList);
-//	}
-	
-//	for (User v1 : vertici) {
-//		for (User v2 : vertici) {
-//			if(!v1.getUserId().equals(v2.getUserId())) {
-//			for (String u1id : reviewMap.keySet()) {
-//			for (String u2id : reviewMap.keySet()) {
-//			if(v1.getUserId().equals(u1id) && v2.getUserId().equals(u2id)) {
-//				List<Review> r1=reviewMap.get(u1id);
-//				List<Review> r2=reviewMap.get(u2id);
-//				for (Review a : r1) {
-//					for (Review b : r2) {
-//						if(a.getDate().getYear()==anno && b.getDate().getYear()==anno && a.getBusinessId().equals(b.getBusinessId())) {
-//		this.grafo.addEdge(v1,v2);
-//			}}
-//	}
-//	}}}}}}
-	
-//	for (User v1 : reviewMap.keySet()) {
-//		for (User v2 : reviewMap.keySet()) {
-//			if(!v1.getUserId().equals(v2.getUserId()) && !this.grafo.edgeSet().contains(this.grafo.getEdge(v1, v2))) {
-//				for (Review a : this.reviewMap.get(v1)) {
-//					for (Review b : this.reviewMap.get(v2)) {
-//						if(a.getDate().getYear()==anno && b.getDate().getYear()==anno && a.getBusinessId().equals(b.getBusinessId())) {
-//		      this.grafo.addEdge(v1,v2);
-//			}}
-//			}
-//			
-//		}}}
 	double peso;
 	for (User v1 : vertici) {
 		for (User v2 : vertici) {
@@ -108,11 +65,7 @@ public class Model {
 			}}
 			}
 			}
-	
-//	for (DefaultWeightedEdge i : this.grafo.edgeSet()) {
-//		System.out.println(this.grafo.getEdgeWeight(i));
-//	}
-//	
+
 	}
 
 public int nVertici() {
@@ -138,21 +91,7 @@ public List<Set<User>> getComponente() {
 public List<Pair<String, Double>> trovaSimili(User v1){
 
 	List<Pair<String, Double>> ris = new LinkedList<>();
-//	
-//		double p=0;
-//		for (User v2 : this.grafo.vertexSet()) {
-//			if(this.grafo.getEdgeWeight(this.grafo.getEdge(v1, v2))>=p && !v1.getUserId().equals(v2.getUserId())) {
-//				p=this.grafo.getEdgeWeight(this.grafo.getEdge(v1, v2));
-//			}
-//		}
-//	
-//	
-//		for (User v2 : this.grafo.vertexSet()) {
-//			if(this.grafo.getEdgeWeight(this.grafo.getEdge(v1, v2))==p && !v1.getUserId().equals(v2.getUserId())) {
-//				ris.add(new Pair<>(v2.getUserId(), p));
-//			}
-//		}
-	
+
 	double p=0;
 	
 	for(DefaultWeightedEdge i :this.grafo.outgoingEdgesOf(v1)) {
